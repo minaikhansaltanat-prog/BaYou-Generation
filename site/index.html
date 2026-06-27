@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BaYou Generation</title>
+<meta name="description" content="BaYou Generation — балабақша директорларына арналған AI операциялық жүйе.">
+<link rel="icon" type="image/png" href="assets/img/logo-transparent.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Nunito:wght@400;500;600;700;800;900&display=swap&subset=cyrillic" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            red: '#E8262F', reddark: '#BD1B23', redlight: '#FDEBEA',
+            green: '#4CAF1F', greendark: '#2E7D14', greenlight: '#EAF7E2',
+            cream: '#FFFBF5', creamdeep: '#FFF3E2',
+            ink: '#20281F', muted: '#56624F', border: '#E9E2D2'
+          }
+        },
+        fontFamily: {
+          display: ['Unbounded', 'Nunito', 'sans-serif'],
+          body: ['Nunito', 'Inter', 'sans-serif']
+        }
+      }
+    }
+  }
+</script>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="font-body text-brand-ink bg-brand-cream">
+
+<!-- ICON SPRITE -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+<symbol id="ic-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></symbol>
+<symbol id="ic-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></symbol>
+<symbol id="ic-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></symbol>
+<symbol id="ic-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.2C0.3 8.4 2 4.5 5.8 4c2.1-.3 4.1.7 6.2 3 2.1-2.3 4.1-3.3 6.2-3 3.8.5 5.5 4.4 3.8 7.8C19.5 16.4 12 21 12 21z"/></symbol>
+<symbol id="ic-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 16 14"/></symbol>
+<symbol id="ic-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 7.8-8 9-4.5-1.2-8-4-8-9V6l8-3z"/><polyline points="9 12 11.5 14.5 16 9.5"/></symbol>
+<symbol id="ic-trend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 6"/><polyline points="15 6 21 6 21 12"/></symbol>
+<symbol id="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 18 20 6"/></symbol>
+<symbol id="ic-star" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2.5l2.95 6.32 6.95.78-5.18 4.78 1.4 6.88L12 17.9l-6.12 3.36 1.4-6.88L2.1 9.6l6.95-.78L12 2.5z"/></symbol>
+<symbol id="ic-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2C9.5 21 3 14.5 3 6a2 2 0 0 1 2-2z"/></symbol>
+<symbol id="ic-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></symbol>
+<symbol id="ic-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11a7 7 0 1 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+<symbol id="ic-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" y1="3" x2="11" y2="13"/><polygon points="21 3 14 21 11 13 3 10 21 3"/></symbol>
+<symbol id="ic-play" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M7 4.5v15l13-7.5z"/></symbol>
+<symbol id="ic-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></symbol>
+<symbol id="ic-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="9" r="1.6"/><path d="M21 15l-5-5-4 4-3-3-6 6"/></symbol>
+<symbol id="ic-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8.5 8.5 0 1 1-3.4-6.8L21 4l-1 4.2A8.4 8.4 0 0 1 21 12z"/></symbol>
+<symbol id="ic-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17.5" cy="9" r="2.6"/><path d="M15 20c0-2.4-.5-4.4-1.6-5.8"/></symbol>
+<symbol id="ic-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><line x1="12" y1="13" x2="12" y2="21"/></symbol>
+<symbol id="ic-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9.2l-4.2 1.7L12 15.5l-1.8-4.6L6 9.2l4.2-1.6z"/><path d="M19 14l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></symbol>
+<symbol id="ic-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="14 6 20 12 14 18"/></symbol>
+<symbol id="ic-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="4"/><polyline points="6 10 12 4 18 10"/></symbol>
+<symbol id="ic-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="3" y1="12" x2="21" y2="12"/><path d="M12 3c2.5 2.5 4 5.7 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.7-4-9s1.5-6.5 4-9z"/></symbol>
+<symbol id="ic-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V10a6 6 0 1 1 12 0v6l1.5 2.5h-15z"/><path d="M10 21a2 2 0 0 0 4 0"/></symbol>
+<symbol id="ic-map-2gis" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="9" x2="9" y2="21"/></symbol>
+</defs>
+</svg>
+
+<!-- HEADER -->
+<header id="siteHeader" class="site-header">
+  <div class="flex items-center justify-between gap-3 px-3 md:px-5 py-2">
+    <a href="#hero" class="flex items-center gap-2 cursor-pointer">
+      <img src="assets/img/logo-transparent.png" alt="BaYou Generation" class="brand-logo">
+    </a>
+
+    <nav class="hidden lg:flex items-center gap-7">
+      <a href="#hero" class="nav-link cursor-pointer" data-kz="Басты бет" data-ru="Главная">Басты бет</a>
+      <a href="#modules" class="nav-link cursor-pointer" data-kz="Мүмкіндіктер" data-ru="Возможности">Мүмкіндіктер</a>
+      <a href="#how" class="nav-link cursor-pointer" data-kz="Қалай жұмыс істейді" data-ru="Как это работает">Қалай жұмыс істейді</a>
+      <a href="#pricing" class="nav-link cursor-pointer" data-kz="Бағасы" data-ru="Тарифы">Бағасы</a>
+      <a href="#reviews" class="nav-link cursor-pointer" data-kz="Пікірлер" data-ru="Отзывы">Пікірлер</a>
+      <a href="#faq" class="nav-link cursor-pointer" data-kz="Сұрақ-жауап" data-ru="Вопросы">Сұрақ-жауап</a>
+    </nav>
+
+    <div class="flex items-center gap-2 md:gap-3">
+      <div class="lang-pill hidden sm:inline-flex" role="group" aria-label="Тіл / Язык">
+        <button type="button" data-lang="kz" class="active cursor-pointer" aria-pressed="true">ҚАЗ</button>
+        <button type="button" data-lang="ru" class="cursor-pointer" aria-pressed="false">РУС</button>
+      </div>
+      <a href="#contact" class="btn btn-primary hidden md:inline-flex cursor-pointer" data-kz="Демо сұрау" data-ru="Запросить демо">Демо сұрау</a>
+      <button id="burgerBtn" type="button" class="burger cursor-pointer lg:hidden" aria-label="Мәзірді ашу" aria-expanded="false" data-kz-aria="Мәзірді ашу" data-ru-aria="Открыть меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- MOBILE MENU -->
+<div id="mobileOverlay" class="mobile-overlay"></div>
+<aside id="mobilePanel" class="mobile-panel" role="dialog" aria-modal="true" aria-label="Навигация">
+  <div class="flex items-center justify-between px-5 py-4 border-b" style="border-color:var(--border)">
+    <img src="assets/img/logo-transparent.png" alt="BaYou Generation" class="h-9">
+    <button id="mobileCloseBtn" type="button" class="mobile-close cursor-pointer" aria-label="Жабу" data-kz-aria="Жабу" data-ru-aria="Закрыть">
+      <svg width="20" height="20"><use href="#ic-x" stroke="#20281F"/></svg>
+    </button>
+  </div>
+
+  <nav class="flex flex-col gap-1 px-3 py-4">
+    <a href="#hero" class="mobile-nav-link cursor-pointer">
+      <svg width="20" height="20" class="opacity-70"><use href="#ic-arrow-right"/></svg>
+      <span data-kz="Басты бет" data-ru="Главная">Басты бет</span>
+    </a>
+    <a href="#why" class="mobile-nav-link cursor-pointer">
+      <svg width="20" height="20" class="opacity-70"><use href="#ic-heart"/></svg>
+      <span data-kz="Неге біз" data-ru="Почему мы">Неге біз</span>
+    </a>
+    <a href="#modules" class="mobile-nav-link cursor-pointer">
+      <svg width="20" height="20" class="opacity-70"><use href="#ic-sparkle"/></svg>
+      <span data-kz="Мүмкіндіктер" data-ru="Возможности">Мүмкіндіктер</span>
+    </a>
+    <a href="#how" class="mobile-nav-link cursor-pointer">
+      <svg width="20" height="20" class="opacity-70"><use href="#ic-arrow-right"/></svg>
+      <span data-kz="Қалай жұмыс істейді" data-ru="Как это работает">Қалай жұмыс істейді</span>
+    </a>
+    <a href="#pricing" class="mobile-nav-link cursor-pointer">
+      <svg width="20" height="20" class="opacity-70"><use href="#ic-box"/></svg>
+      <span data-kz="Бағасы" data-ru="Тарифы">Бағасы</span>
+    </a>
+    <a href="#reviews" class="mobile-nav-link cursor-pointer">
+      <svg width="20" height="20" class="opacity-70"><use href="#ic-star"/></svg>
+      <span data-kz="Пікірлер" data-ru="Отзывы">Пікірлер</span>
+    </a>
+    <a href="#faq" class="mobile-nav-link cursor-pointer">
+      <svg width="20" height="20" class="opacity-70"><use href="#ic-chat"/></svg>
+      <span data-kz="Сұрақ-жауап" data-ru="Вопросы">Сұрақ-жауап</span>
+    </a>
+    <a href="#contact" class="mobile-nav-link cursor-pointer">
+      <svg width="20" height="20" class="opacity-70"><use href="#ic-mail"/></svg>
+      <span data-kz="Байланыс" data-ru="Контакты">Байланыс</span>
+    </a>
+  </nav>
+
+  <div class="px-5 pt-2">
+    <div class="lang-pill w-full justify-center flex" role="group" aria-label="Тіл / Язык">
+      <button type="button" data-lang="kz" class="active cursor-pointer flex-1">ҚАЗ</button>
+      <button type="button" data-lang="ru" class="cursor-pointer flex-1">РУС</button>
+    </div>
+  </div>
+
+  <div class="mt-auto px-5 py-5 flex flex-col gap-3 border-t" style="border-color:var(--border)">
+    <a href="#contact" class="btn btn-primary w-full cursor-pointer" data-kz="Демо сұрау" data-ru="Запросить демо">Демо сұрау</a>
+    <a href="https://wa.me/77086279544" target="_blank" rel="noopener" class="btn btn-outline w-full cursor-pointer">
+      <svg width="18" height="18"><use href="#ic-phone"/></svg>
+      <span>+7 708 627 95 44</span>
+    </a>
+  </div>
+</aside>
+
+<main>
+<!-- HERO -->
+<section id="hero" class="relative pt-8 md:pt-14 pb-16 md:pb-24 px-4 md:px-8 overflow-hidden">
+  <div class="blob w-72 h-72 -top-10 -left-16 opacity-20" style="background:var(--green)"></div>
+  <div class="blob w-80 h-80 top-32 -right-24 opacity-15" style="background:var(--red)" aria-hidden="true"></div>
+
+  <div class="relative max-w-7xl mx-auto grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+    <div class="reveal">
+      <span class="eyebrow green">
+        <svg width="14" height="14"><use href="#ic-sparkle"/></svg>
+        <span data-kz="AI НЕГІЗДІ БАЛАБАҚША ПЛАТФОРМАСЫ" data-ru="AI-ПЛАТФОРМА ДЛЯ ДЕТСКИХ САДОВ">AI НЕГІЗДІ БАЛАБАҚША ПЛАТФОРМАСЫ</span>
+      </span>
+
+      <h1 class="font-display font-bold text-[2.1rem] leading-[1.18] sm:text-4xl md:text-5xl mt-5 mb-6 text-brand-ink">
+        <span data-kz="Жүрегіңіздегі сүйіспеншілікті —" data-ru="Любовь к детям, которая живёт в вас, —">Жүрегіңіздегі сүйіспеншілікті —</span>
+        <span class="text-brand-green" data-kz="бір платформада басқарыңыз" data-ru="теперь умещается в одной платформе">бір платформада басқарыңыз</span>
+      </h1>
+
+      <p class="text-lg text-brand-muted max-w-xl mb-8 leading-relaxed" data-kz="BaYou Generation — балабақша директорларына арналған AI операциялық жүйе: тапсырыстан тіркеуге дейін барлығы автоматты, ал сізге — балаларға көбірек уақыт қалады." data-ru="BaYou Generation — AI-операционная система для директоров детских садов: от заказов до записи новых детей всё автоматизировано, а у вас остаётся больше времени на главное.">BaYou Generation — балабақша директорларына арналған AI операциялық жүйе: тапсырыстан тіркеуге дейін барлығы автоматты, ал сізге — балаларға көбірек уақыт қалады.</p>
+
+      <div class="flex flex-wrap gap-3 mb-10">
+        <a href="#contact" class="btn btn-primary cursor-pointer">
+          <svg width="20" height="20"><use href="#ic-phone"/></svg>
+          <span data-kz="Тегін демо сұрау" data-ru="Запросить бесплатное демо">Тегін демо сұрау</span>
+        </a>
+        <a href="#modules" class="btn btn-outline cursor-pointer">
+          <span data-kz="Мүмкіндіктерді көру" data-ru="Смотреть возможности">Мүмкіндіктерді көру</span>
+          <svg width="18" height="18"><use href="#ic-arrow-right"/></svg>
+        </a>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-x-8 gap-y-3">
+        <div>
+          <div class="stat-num text-3xl text-brand-green"><span data-count="50" data-suffix="+">0</span></div>
+          <div class="text-sm text-brand-muted font-semibold" data-kz="балабақша" data-ru="детских садов">балабақша</div>
+        </div>
+        <div>
+          <div class="stat-num text-3xl text-brand-red"><span data-count="8">0</span></div>
+          <div class="text-sm text-brand-muted font-semibold" data-kz="AI модуль" data-ru="AI-модулей">AI модуль</div>
+        </div>
+        <div>
+          <div class="stat-num text-3xl text-brand-green"><span data-count="24" data-suffix="/7">0</span></div>
+          <div class="text-sm text-brand-muted font-semibold" data-kz="қолдау" data-ru="поддержка">қолдау</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative reveal">
+      <div class="hero-frame max-w-md mx-auto">
+        <img src="assets/img/photo-5.jpg" alt="" class="w-full h-[420px] object-cover" loading="eager">
+      </div>
+
+      <div class="floating-chip -left-2 top-8 md:-left-8">
+        <div class="icon-tile green !w-10 !h-10 !min-w-10 !rounded-xl">
+          <svg width="20" height="20"><use href="#ic-users"/></svg>
+        </div>
+        <div>
+          <div class="font-extrabold text-sm leading-none" data-kz="50+ балабақша" data-ru="50+ садов">50+ балабақша</div>
+          <div class="text-xs text-brand-muted" data-kz="бізге сенеді" data-ru="доверяют нам">бізге сенеді</div>
+        </div>
+      </div>
+
+      <div class="floating-chip right-0 bottom-10 md:-right-8" style="animation-delay:1.5s">
+        <div class="icon-tile red !w-10 !h-10 !min-w-10 !rounded-xl">
+          <svg width="20" height="20"><use href="#ic-chat"/></svg>
+        </div>
+        <div>
+          <div class="font-extrabold text-sm leading-none" data-kz="24/7 AI қолдау" data-ru="24/7 AI-поддержка">24/7 AI қолдау</div>
+          <div class="text-xs text-brand-muted" data-kz="ата-аналарға" data-ru="для родителей">ата-аналарға</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST STRIP -->
+<section class="px-4 md:px-8 pb-14 md:pb-20 reveal">
+  <div class="max-w-5xl mx-auto card p-6 md:p-8">
+    <p class="text-center text-sm font-extrabold uppercase tracking-wide text-brand-muted mb-5" data-kz="Сенім тұтады" data-ru="Нам доверяют">Сенім тұтады</p>
+    <div class="trust-strip">
+      <div class="flex items-center gap-2"><svg width="20" height="20" class="text-brand-green"><use href="#ic-users"/></svg><span class="font-bold" data-kz="50+ балабақша" data-ru="50+ детских садов">50+ балабақша</span></div>
+      <div class="flex items-center gap-2"><svg width="20" height="20" class="text-brand-red"><use href="#ic-heart"/></svg><span class="font-bold" data-kz="10 000+ ата-ана" data-ru="10 000+ родителей">10 000+ ата-ана</span></div>
+      <div class="flex items-center gap-2"><svg width="20" height="20" class="text-brand-green"><use href="#ic-sparkle"/></svg><span class="font-bold" data-kz="8 AI модуль" data-ru="8 AI-модулей">8 AI модуль</span></div>
+      <div class="flex items-center gap-2"><svg width="20" height="20" class="text-brand-red"><use href="#ic-shield"/></svg><span class="font-bold" data-kz="ҚР серверінде" data-ru="серверы в Казахстане">ҚР серверінде</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why" class="px-4 md:px-8 py-16 md:py-24">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-12 reveal">
+      <span class="eyebrow red">
+        <svg width="14" height="14"><use href="#ic-heart"/></svg>
+        <span data-kz="НЕГЕ BAYOU GENERATION" data-ru="ПОЧЕМУ BAYOU GENERATION">НЕГЕ BAYOU GENERATION</span>
+      </span>
+      <h2 class="font-display font-bold text-3xl md:text-4xl mt-5 leading-tight" data-kz="Сіз балаларға қамқорлық жасайсыз. Қалғанын — біз ойлаймыз." data-ru="Вы заботитесь о детях. Об остальном позаботимся мы.">Сіз балаларға қамқорлық жасайсыз. Қалғанын — біз ойлаймыз.</h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div class="card p-6 reveal">
+        <div class="icon-tile green mb-5"><svg width="26" height="26"><use href="#ic-clock"/></svg></div>
+        <h3 class="font-display font-semibold text-lg mb-2" data-kz="Уақытты қайтарады" data-ru="Возвращает время">Уақытты қайтарады</h3>
+        <p class="text-brand-muted text-sm leading-relaxed" data-kz="Тапсырыс, пост, чат-бот, тіркеу — бәрі автоматты. Сіз қағазбастылықтан босап, балаларға назар аударасыз." data-ru="Заказы, посты, чат-бот, запись — всё автоматизировано. Меньше бумажной работы, больше внимания детям.">Тапсырыс, пост, чат-бот, тіркеу — бәрі автоматты. Сіз қағазбастылықтан босап, балаларға назар аударасыз.</p>
+      </div>
+      <div class="card p-6 reveal">
+        <div class="icon-tile red mb-5"><svg width="26" height="26"><use href="#ic-heart"/></svg></div>
+        <h3 class="font-display font-semibold text-lg mb-2" data-kz="Жүрекпен жасалған" data-ru="Создано с заботой">Жүрекпен жасалған</h3>
+        <p class="text-brand-muted text-sm leading-relaxed" data-kz="Әр функция — балабақша өмірінің нақты сценарийлерінен туған. Біз сіздің күн тәртібіңізді білеміз." data-ru="Каждая функция рождена из реальных сценариев жизни детского сада. Мы знаем ваш распорядок дня.">Әр функция — балабақша өмірінің нақты сценарийлерінен туған. Біз сіздің күн тәртібіңізді білеміз.</p>
+      </div>
+      <div class="card p-6 reveal">
+        <div class="icon-tile green mb-5"><svg width="26" height="26"><use href="#ic-shield"/></svg></div>
+        <h3 class="font-display font-semibold text-lg mb-2" data-kz="Деректер қауіпсіз" data-ru="Данные защищены">Деректер қауіпсіз</h3>
+        <p class="text-brand-muted text-sm leading-relaxed" data-kz="Әр балабақшаның деректері бөлек сақталады, Қазақстан серверінде, заңнамаға сай." data-ru="Данные каждого сада хранятся изолированно, на серверах в Казахстане, согласно законодательству.">Әр балабақшаның деректері бөлек сақталады, Қазақстан серверінде, заңнамаға сай.</p>
+      </div>
+      <div class="card p-6 reveal">
+        <div class="icon-tile red mb-5"><svg width="26" height="26"><use href="#ic-trend"/></svg></div>
+        <h3 class="font-display font-semibold text-lg mb-2" data-kz="Бірге өседі" data-ru="Растёт вместе с вами">Бірге өседі</h3>
+        <p class="text-brand-muted text-sm leading-relaxed" data-kz="50 балабақшадан 500-ге дейін — платформа сіздің өсуіңізге дайын." data-ru="От 50 до 500+ садов — платформа готова расти вместе с вами.">50 балабақшадан 500-ге дейін — платформа сіздің өсуіңізге дайын.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section id="modules" class="px-4 md:px-8 py-16 md:py-24 bg-brand-creamdeep/60">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-12 reveal">
+      <span class="eyebrow green">
+        <svg width="14" height="14"><use href="#ic-box"/></svg>
+        <span data-kz="8 КҮШТІ МОДУЛЬ" data-ru="8 МОЩНЫХ МОДУЛЕЙ">8 КҮШТІ МОДУЛЬ</span>
+      </span>
+      <h2 class="font-display font-bold text-3xl md:text-4xl mt-5 leading-tight" data-kz="Балабақшаның күнделікті ісі — бір платформада" data-ru="Повседневные задачи сада — в одной платформе">Балабақшаның күнделікті ісі — бір платформада</h2>
+      <p class="text-brand-muted mt-4" data-kz="AZYQ Food жеткізуден бастап, ата-аналармен қарым-қатынасқа дейін — BaYou Generation барлық процесті біріктіреді." data-ru="От доставки AZYQ Food до общения с родителями — BaYou Generation объединяет все процессы.">AZYQ Food жеткізуден бастап, ата-аналармен қарым-қатынасқа дейін — BaYou Generation барлық процесті біріктіреді.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div class="card p-6 reveal">
+        <div class="icon-tile red mb-5"><svg width="24" height="24"><use href="#ic-box"/></svg></div>
+        <h3 class="font-display font-semibold text-base mb-2" data-kz="AZYQ Food — жеткізу" data-ru="AZYQ Food — доставка">AZYQ Food — жеткізу</h3>
+        <p class="text-brand-muted text-sm leading-relaxed" data-kz="Апталық тапсырыс, жеткізу растауы, накладной мен счет автоматты PDF түрінде." data-ru="Еженедельные заказы, подтверждение доставки, накладные и счета — автоматически в PDF.">Апталық тапсырыс, жеткізу растауы, накладной мен счет автоматты PDF түрінде.</p>
+      </div>
+      <div class="card p-6 reveal">
+        <div class="icon-tile green mb-5"><svg width="24" height="24"><use href="#ic-sparkle"/></svg></div>
+        <h3 class="font-display font-semibold text-base mb-2" data-kz="AI Content Studio" data-ru="AI Content Studio">AI Content Studio</h3>
+        <p class="text-brand-muted text-sm leading-relaxed" data-kz="Бір промпттан қазақша және орысша пост, хэштег, 30+ мерекелік шаблон." data-ru="Из одного запроса — пост на казахском и русском, хэштеги, 30+ праздничных шаблонов.">Бір промпттан қазақша және орысша пост, хэштег, 30+ мерекелік шаблон.</p>
+      </div>
+      <div class="card p-6 reveal">
+        <div class="icon-tile red mb-5"><svg width="24" height="24"><use href="#ic-send"/></svg></div>
+        <h3 class="font-display font-semibold text-base mb-2" data-kz="Auto Publisher" data-ru="Auto Publisher">Auto Publisher</h3>
+        <p class="text-brand-muted text-sm leading-relaxed" data-kz="Instagram, Facebook, Telegram, WhatsApp — бір батырмамен немесе кесте бойынша." data-ru="Instagram, Facebook, Telegram, WhatsApp — одной кнопкой или по расписанию.">Instagram, Facebook, Telegram, WhatsApp — бір батырмамен немесе кесте бойынша.</p>
+      </div>
+      <div class="card p-6 reveal">
+        <div class="icon-tile green mb-5"><svg width="24" height="24"><use href="#ic-image"/></svg></div>
+        <h3 class="font-display font-semibold text-base mb-2" data-kz="AI Avatar Studio" data-ru="AI Avatar Studio">AI Avatar Studio</h3>
+        <p class="text-brand-muted text-sm leading-relaxed" data-kz="Брендтік AI сурет, 20+ дайын пакет (Наурыз, Жаз, Мерекелер), жеке галерея." data-ru="Брендированные AI-изображения, 20+ готовых пакетов (Наурыз, лето, праздники), своя галерея.">Брендтік AI сурет, 20+ дайын пакет (Наурыз, Жаз, Мерекелер), жеке галерея.</p>
+      </div>
+      <div class="card p-6 reveal">
+        <div class="icon-tile red mb-5"><svg width="24" height="24"><use href="#ic-chat"/></svg></div>
+        <h3 class="font-display font-semibold text-base mb-2" data-kz="Ата-аналар чат-боты" data-ru="Чат-бот для родителей">Ата-аналар чат-боты</h3>
+        <p class="text-brand-muted text-sm leading-relaxed" data-kz="WhatsApp бот 24/7 жауап береді: бос орын, баға, жас шектеуі, визит жазу." data-ru="WhatsApp-бот отвечает 24/7: свободные места, цены, возрастные группы, запись на визит.">WhatsApp бот 24/7 жауап береді: бос орын, баға, жас шектеуі, визит жазу.</p>
+      </div>
+      <div class="card p-6 reveal">
+        <div class="icon-tile green mb-5"><svg width="24" height="24"><use href="#ic-phone"/></svg></div>
+        <h3 class="font-display font-semibold text-base mb-2" data-kz="Дауыс боты" data-ru="Голосовой бот">Дауыс боты</h3>
+        <p class="text-brand-muted text-sm leading-relaxed" data-kz="Автоматты аудио қоңырау: бос орын хабары, еске салу, IVR сценарийі." data-ru="Автоматические голосовые звонки: уведомления о местах, напоминания, IVR-сценарии.">Автоматты аудио қоңырау: бос орын хабары, еске салу, IVR сценарийі.</p>
+      </div>
+      <div class="card p-6 reveal">
+        <div class="icon-tile red mb-5"><svg width="24" height="24"><use href="#ic-shield"/></svg></div>
+        <h3 class="font-display font-semibold text-base mb-2" data-kz="Пікірлер менеджменті" data-ru="Менеджмент отзывов">Пікірлер менеджменті</h3>
+        <p class="text-brand-muted text-sm leading-relaxed" data-kz="Google/2GIS пікір сұрау, теріс пікірді сорттау, AI жауап шаблондары." data-ru="Запрос отзывов в Google/2GIS, сортировка негативных, AI-шаблоны ответов.">Google/2GIS пікір сұрау, теріс пікірді сорттау, AI жауап шаблондары.</p>
+      </div>
+      <div class="card p-6 reveal">
+        <div class="icon-tile green mb-5"><svg width="24" height="24"><use href="#ic-users"/></svg></div>
+        <h3 class="font-display font-semibold text-base mb-2" data-kz="Тіркеу CRM" data-ru="CRM для записи детей">Тіркеу CRM</h3>
+        <p class="text-brand-muted text-sm leading-relaxed" data-kz="Лид воронкасы, бос орын трекері, 3 күннен кейін автоматты follow-up." data-ru="Воронка лидов, трекер свободных мест, автоматический follow-up через 3 дня.">Лид воронкасы, бос орын трекері, 3 күннен кейін автоматты follow-up.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="px-4 md:px-8 py-16 md:py-24">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-14 reveal">
+      <span class="eyebrow red">
+        <svg width="14" height="14"><use href="#ic-arrow-right"/></svg>
+        <span data-kz="ҮДЕРІС" data-ru="ПРОЦЕСС">ҮДЕРІС</span>
+      </span>
+      <h2 class="font-display font-bold text-3xl md:text-4xl mt-5 leading-tight" data-kz="4 қадам — толық автоматтандыруға дейін" data-ru="4 шага до полной автоматизации">4 қадам — толық автоматтандыруға дейін</h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="relative reveal">
+        <div class="text-5xl font-display font-bold text-brand-greenlight mb-3 select-none" aria-hidden="true">01</div>
+        <h3 class="font-display font-semibold text-lg mb-2" data-kz="Тіркелу" data-ru="Регистрация">Тіркелу</h3>
+        <p class="text-brand-muted text-sm leading-relaxed" data-kz="Балабақшаңызды қосамыз, топтар мен қызметкерлерді баптаймыз." data-ru="Подключаем ваш сад, настраиваем группы и сотрудников.">Балабақшаңызды қосамыз, топтар мен қызметкерлерді баптаймыз.</p>
+      </div>
+      <div class="relative reveal">
+        <div class="text-5xl font-display font-bold text-brand-redlight mb-3 select-none" aria-hidden="true">02</div>
+        <h3 class="font-display font-semibold text-lg mb-2" data-kz="Баптау" data-ru="Настройка">Баптау</h3>
+        <p class="text-brand-muted text-sm leading-relaxed" data-kz="Бренд түсі, логотип, баға тізімі, WhatsApp нөмірі — бәрі бір жерде." data-ru="Бренд, цвета, прайс-лист, номер WhatsApp — всё в одном месте.">Бренд түсі, логотип, баға тізімі, WhatsApp нөмірі — бәрі бір жерде.</p>
+      </div>
+      <div class="relative reveal">
+        <div class="text-5xl font-display font-bold text-brand-greenlight mb-3 select-none" aria-hidden="true">03</div>
+        <h3 class="font-display font-semibold text-lg mb-2" data-kz="Автоматтандыру" data-ru="Автоматизация">Автоматтандыру</h3>
+        <p class="text-brand-muted text-sm leading-relaxed" data-kz="AI контент, чат-бот, жариялау, тіркеу CRM іске қосылады." data-ru="Запускаются AI-контент, чат-бот, публикации и CRM.">AI контент, чат-бот, жариялау, тіркеу CRM іске қосылады.</p>
+      </div>
+      <div class="relative reveal">
+        <div class="text-5xl font-display font-bold text-brand-redlight mb-3 select-none" aria-hidden="true">04</div>
+        <h3 class="font-display font-semibold text-lg mb-2" data-kz="Нәтиже" data-ru="Результат">Нәтиже</h3>
+        <p class="text-brand-muted text-sm leading-relaxed" data-kz="Көбірек лид, аз қағазбастылық, әр баланың отбасы қанағаттанады." data-ru="Больше заявок, меньше бумаги, счастливые семьи.">Көбірек лид, аз қағазбастылық, әр баланың отбасы қанағаттанады.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="px-4 md:px-8 py-16 md:py-24 bg-brand-creamdeep/60">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-12 reveal">
+      <span class="eyebrow green">
+        <svg width="14" height="14"><use href="#ic-box"/></svg>
+        <span data-kz="ТАРИФТЕР" data-ru="ТАРИФЫ">ТАРИФТЕР</span>
+      </span>
+      <h2 class="font-display font-bold text-3xl md:text-4xl mt-5 leading-tight" data-kz="Балабақшаңыздың өлшеміне сай тариф" data-ru="Тариф под размер вашего сада">Балабақшаңыздың өлшеміне сай тариф</h2>
+      <p class="text-brand-muted mt-4" data-kz="Барлық тарифте негізгі AI модульдер бар. Нақты бағаны команда сізбен жеке талқылайды." data-ru="Во всех тарифах есть базовые AI-модули. Точную стоимость команда обсудит с вами индивидуально.">Барлық тарифте негізгі AI модульдер бар. Нақты бағаны команда сізбен жеке талқылайды.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 items-start">
+      <div class="card p-6 reveal">
+        <h3 class="font-display font-semibold text-xl mb-1" data-kz="Бастапқы" data-ru="Базовый">Бастапқы</h3>
+        <p class="text-sm text-brand-muted mb-5" data-kz="1 балабақша үшін" data-ru="Для одного сада">1 балабақша үшін</p>
+        <ul class="space-y-3 text-sm mb-6">
+          <li class="flex gap-2"><svg width="18" height="18" class="text-brand-green flex-shrink-0"><use href="#ic-check"/></svg><span data-kz="AZYQ Food жеткізу" data-ru="Доставка AZYQ Food">AZYQ Food жеткізу</span></li>
+          <li class="flex gap-2"><svg width="18" height="18" class="text-brand-green flex-shrink-0"><use href="#ic-check"/></svg><span data-kz="Ата-аналар чат-боты" data-ru="Чат-бот для родителей">Ата-аналар чат-боты</span></li>
+          <li class="flex gap-2"><svg width="18" height="18" class="text-brand-green flex-shrink-0"><use href="#ic-check"/></svg><span data-kz="Тіркеу CRM" data-ru="CRM для записи">Тіркеу CRM</span></li>
+          <li class="flex gap-2"><svg width="18" height="18" class="text-brand-green flex-shrink-0"><use href="#ic-check"/></svg><span data-kz="Email қолдау" data-ru="Поддержка по email">Email қолдау</span></li>
+        </ul>
+        <a href="#contact" class="btn btn-outline w-full cursor-pointer" data-kz="Сұрау жіберу" data-ru="Отправить запрос">Сұрау жіберу</a>
+      </div>
+
+      <div class="card p-6 reveal relative" style="border-color:var(--green); box-shadow:var(--shadow-clay-lg)">
+        <span class="absolute -top-3 left-6 eyebrow green" data-kz="Танымал" data-ru="Популярный">Танымал</span>
+        <h3 class="font-display font-semibold text-xl mb-1" data-kz="Өсу" data-ru="Рост">Өсу</h3>
+        <p class="text-sm text-brand-muted mb-5" data-kz="Белсенді дамитын балабақшаға" data-ru="Для активно растущего сада">Белсенді дамитын балабақшаға</p>
+        <ul class="space-y-3 text-sm mb-6">
+          <li class="flex gap-2"><svg width="18" height="18" class="text-brand-green flex-shrink-0"><use href="#ic-check"/></svg><span data-kz="Бастапқы тарифтің бәрі" data-ru="Всё из тарифа «Базовый»">Бастапқы тарифтің бәрі</span></li>
+          <li class="flex gap-2"><svg width="18" height="18" class="text-brand-green flex-shrink-0"><use href="#ic-check"/></svg><span data-kz="AI Content Studio" data-ru="AI Content Studio">AI Content Studio</span></li>
+          <li class="flex gap-2"><svg width="18" height="18" class="text-brand-green flex-shrink-0"><use href="#ic-check"/></svg><span data-kz="Auto Publisher" data-ru="Auto Publisher">Auto Publisher</span></li>
+          <li class="flex gap-2"><svg width="18" height="18" class="text-brand-green flex-shrink-0"><use href="#ic-check"/></svg><span data-kz="Басымдықты қолдау" data-ru="Приоритетная поддержка">Басымдықты қолдау</span></li>
+        </ul>
+        <a href="#contact" class="btn btn-primary w-full cursor-pointer" data-kz="Сұрау жіберу" data-ru="Отправить запрос">Сұрау жіберу</a>
+      </div>
+
+      <div class="card p-6 reveal">
+        <h3 class="font-display font-semibold text-xl mb-1" data-kz="Про" data-ru="Про">Про</h3>
+        <p class="text-sm text-brand-muted mb-5" data-kz="Толық автоматтандыруға" data-ru="Для полной автоматизации">Толық автоматтандыруға</p>
+        <ul class="space-y-3 text-sm mb-6">
+          <li class="flex gap-2"><svg width="18" height="18" class="text-brand-green flex-shrink-0"><use href="#ic-check"/></svg><span data-kz="Өсу тарифінің бәрі" data-ru="Всё из тарифа «Рост»">Өсу тарифінің бәрі</span></li>
+          <li class="flex gap-2"><svg width="18" height="18" class="text-brand-green flex-shrink-0"><use href="#ic-check"/></svg><span data-kz="AI Avatar Studio" data-ru="AI Avatar Studio">AI Avatar Studio</span></li>
+          <li class="flex gap-2"><svg width="18" height="18" class="text-brand-green flex-shrink-0"><use href="#ic-check"/></svg><span data-kz="Дауыс боты" data-ru="Голосовой бот">Дауыс боты</span></li>
+          <li class="flex gap-2"><svg width="18" height="18" class="text-brand-green flex-shrink-0"><use href="#ic-check"/></svg><span data-kz="Пікірлер менеджменті" data-ru="Менеджмент отзывов">Пікірлер менеджменті</span></li>
+        </ul>
+        <a href="#contact" class="btn btn-outline w-full cursor-pointer" data-kz="Сұрау жіберу" data-ru="Отправить запрос">Сұрау жіберу</a>
+      </div>
+
+      <div class="card p-6 reveal" style="background:var(--ink); color:#fff; border-color:var(--ink)">
+        <h3 class="font-display font-semibold text-xl mb-1" data-kz="Энтерпрайз" data-ru="Энтерпрайз">Энтерпрайз</h3>
+        <p class="text-sm opacity-70 mb-5" data-kz="Балабақша желілеріне" data-ru="Для сети детских садов">Балабақша желілеріне</p>
+        <ul class="space-y-3 text-sm mb-6">
+          <li class="flex gap-2"><svg width="18" height="18" class="text-brand-green flex-shrink-0"><use href="#ic-check"/></svg><span data-kz="Про тарифінің бәрі" data-ru="Всё из тарифа «Про»">Про тарифінің бәрі</span></li>
+          <li class="flex gap-2"><svg width="18" height="18" class="text-brand-green flex-shrink-0"><use href="#ic-check"/></svg><span data-kz="Көп тармақты басқару" data-ru="Управление сетью филиалов">Көп тармақты басқару</span></li>
+          <li class="flex gap-2"><svg width="18" height="18" class="text-brand-green flex-shrink-0"><use href="#ic-check"/></svg><span data-kz="Жеке интеграциялар" data-ru="Индивидуальные интеграции">Жеке интеграциялар</span></li>
+          <li class="flex gap-2"><svg width="18" height="18" class="text-brand-green flex-shrink-0"><use href="#ic-check"/></svg><span data-kz="Жеке менеджер" data-ru="Персональный менеджер">Жеке менеджер</span></li>
+        </ul>
+        <a href="#contact" class="btn btn-accent w-full cursor-pointer" data-kz="Сұрау жіберу" data-ru="Отправить запрос">Сұрау жіберу</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews" class="px-4 md:px-8 py-16 md:py-24">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-10 reveal">
+      <span class="eyebrow red">
+        <svg width="14" height="14"><use href="#ic-shield"/></svg>
+        <span data-kz="ПІКІРЛЕР МЕНЕДЖМЕНТІ" data-ru="МЕНЕДЖМЕНТ ОТЗЫВОВ">ПІКІРЛЕР МЕНЕДЖМЕНТІ</span>
+      </span>
+      <h2 class="font-display font-bold text-3xl md:text-4xl mt-5 leading-tight" data-kz="Ата-ана пікірлері — енді бәрі бір экранда" data-ru="Отзывы родителей — теперь все на одном экране">Ата-ана пікірлері — енді бәрі бір экранда</h2>
+      <p class="text-brand-muted mt-4" data-kz="Review Manager модулі видео, жазбаша, аудио және 2GIS пікірлерін бір жерге жинайды. Төменде — функцияның үлгі көрінісі." data-ru="Модуль Review Manager собирает видео, письменные, аудио и 2GIS-отзывы в одном месте. Ниже — демонстрационный пример работы функции.">Review Manager модулі видео, жазбаша, аудио және 2GIS пікірлерін бір жерге жинайды. Төменде — функцияның үлгі көрінісі.</p>
+    </div>
+
+    <div class="flex flex-wrap justify-center gap-2 mb-10 reveal" role="tablist" aria-label="Пікір түрлері">
+      <button type="button" class="tab-btn active cursor-pointer" data-tab="video" role="tab" aria-selected="true">
+        <svg width="16" height="16"><use href="#ic-play"/></svg>
+        <span data-kz="Видео" data-ru="Видео">Видео</span>
+      </button>
+      <button type="button" class="tab-btn cursor-pointer" data-tab="written" role="tab" aria-selected="false">
+        <svg width="16" height="16"><use href="#ic-mail"/></svg>
+        <span data-kz="Жазбаша" data-ru="Письменные">Жазбаша</span>
+      </button>
+      <button type="button" class="tab-btn cursor-pointer" data-tab="audio" role="tab" aria-selected="false">
+        <svg width="16" height="16"><use href="#ic-mic"/></svg>
+        <span data-kz="Аудио" data-ru="Аудио">Аудио</span>
+      </button>
+      <button type="button" class="tab-btn cursor-pointer" data-tab="2gis" role="tab" aria-selected="false">
+        <svg width="16" height="16"><use href="#ic-map-2gis"/></svg>
+        <span>2GIS</span>
+      </button>
+    </div>
+
+    <!-- VIDEO PANEL -->
+    <div class="tab-panel active grid sm:grid-cols-2 lg:grid-cols-3 gap-5" data-tab-panel="video">
+      <div class="card overflow-hidden relative reveal">
+        <span class="sample-badge" data-kz="Үлгі" data-ru="Пример">Үлгі</span>
+        <div class="relative">
+          <img src="assets/img/photo-1.jpg" alt="" class="w-full h-44 object-cover">
+          <button type="button" class="absolute inset-0 flex items-center justify-center cursor-pointer" aria-label="Видеоны ойнату" data-kz-aria="Видеоны ойнату" data-ru-aria="Воспроизвести видео">
+            <span class="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center text-brand-green shadow-lg"><svg width="22" height="22"><use href="#ic-play"/></svg></span>
+          </button>
+        </div>
+        <div class="p-5">
+          <div class="stars mb-2"><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg></div>
+          <p class="text-sm text-brand-muted mb-3" data-kz="«Балам әр күн сайын балабақшаға барғысы келеді» — қысқа видео-пікір." data-ru="«Мой ребёнок каждый день хочет идти в сад» — короткий видео-отзыв.">«Балам әр күн сайын балабақшаға барғысы келеді» — қысқа видео-пікір.</p>
+          <p class="font-bold text-sm" data-kz="Айгерім Т., ата-ана" data-ru="Айгерим Т., родитель">Айгерім Т., ата-ана</p>
+        </div>
+      </div>
+      <div class="card overflow-hidden relative reveal">
+        <span class="sample-badge" data-kz="Үлгі" data-ru="Пример">Үлгі</span>
+        <div class="relative">
+          <img src="assets/img/photo-3.jpg" alt="" class="w-full h-44 object-cover">
+          <button type="button" class="absolute inset-0 flex items-center justify-center cursor-pointer" aria-label="Видеоны ойнату" data-kz-aria="Видеоны ойнату" data-ru-aria="Воспроизвести видео">
+            <span class="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center text-brand-red shadow-lg"><svg width="22" height="22"><use href="#ic-play"/></svg></span>
+          </button>
+        </div>
+        <div class="p-5">
+          <div class="stars mb-2"><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg></div>
+          <p class="text-sm text-brand-muted mb-3" data-kz="«Мұғалімдер өте мейірімді, әрқашан хабарласып отырады» дейтін видео-пікір." data-ru="«Воспитатели очень добрые, всегда на связи» — видео-отзыв.">«Мұғалімдер өте мейірімді, әрқашан хабарласып отырады» дейтін видео-пікір.</p>
+          <p class="font-bold text-sm" data-kz="Дәурен Қ., ата-ана" data-ru="Даурен К., родитель">Дәурен Қ., ата-ана</p>
+        </div>
+      </div>
+      <div class="card overflow-hidden relative reveal">
+        <span class="sample-badge" data-kz="Үлгі" data-ru="Пример">Үлгі</span>
+        <div class="relative">
+          <img src="assets/img/photo-6.jpg" alt="" class="w-full h-44 object-cover">
+          <button type="button" class="absolute inset-0 flex items-center justify-center cursor-pointer" aria-label="Видеоны ойнату" data-kz-aria="Видеоны ойнату" data-ru-aria="Воспроизвести видео">
+            <span class="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center text-brand-green shadow-lg"><svg width="22" height="22"><use href="#ic-play"/></svg></span>
+          </button>
+        </div>
+        <div class="p-5">
+          <div class="stars mb-2"><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg></div>
+          <p class="text-sm text-brand-muted mb-3" data-kz="«WhatsApp боты сұрағыма бірден жауап берді» — видео-пікір үлгісі." data-ru="«WhatsApp-бот сразу ответил на мой вопрос» — пример видео-отзыва.">«WhatsApp боты сұрағыма бірден жауап берді» — видео-пікір үлгісі.</p>
+          <p class="font-bold text-sm" data-kz="Сәуле М., ата-ана" data-ru="Сауле М., родитель">Сәуле М., ата-ана</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- WRITTEN PANEL -->
+    <div class="tab-panel grid sm:grid-cols-2 lg:grid-cols-3 gap-5" data-tab-panel="written">
+      <div class="card p-6 relative reveal">
+        <span class="sample-badge" data-kz="Үлгі" data-ru="Пример">Үлгі</span>
+        <div class="stars mb-3"><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg></div>
+        <p class="text-brand-muted text-sm leading-relaxed mb-4" data-kz="«Тапсырыс беру де, төлем де бір батырмамен. Уақыт үнемдеймін.»" data-ru="«Заказ и оплата — одной кнопкой. Экономлю время каждый день.»">«Тапсырыс беру де, төлем де бір батырмамен. Уақыт үнемдеймін.»</p>
+        <p class="font-bold text-sm" data-kz="Гүлнара Б., ата-ана" data-ru="Гульнара Б., родитель">Гүлнара Б., ата-ана</p>
+      </div>
+      <div class="card p-6 relative reveal">
+        <span class="sample-badge" data-kz="Үлгі" data-ru="Пример">Үлгі</span>
+        <div class="stars mb-3"><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg></div>
+        <p class="text-brand-muted text-sm leading-relaxed mb-4" data-kz="«Әр аптада балабақша өмірінен нақты фото-видео келеді, көңілім тыныш.»" data-ru="«Каждую неделю получаю реальные фото и видео из сада — на душе спокойно.»">«Әр аптада балабақша өмірінен нақты фото-видео келеді, көңілім тыныш.»</p>
+        <p class="font-bold text-sm" data-kz="Нұргүл С., ата-ана" data-ru="Нургуль С., родитель">Нұргүл С., ата-ана</p>
+      </div>
+      <div class="card p-6 relative reveal">
+        <span class="sample-badge" data-kz="Үлгі" data-ru="Пример">Үлгі</span>
+        <div class="stars mb-3"><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg><svg width="16" height="16"><use href="#ic-star"/></svg></div>
+        <p class="text-brand-muted text-sm leading-relaxed mb-4" data-kz="«Кезекте тұрмай-ақ, чат-боттан бос орынды бірден білдім.»" data-ru="«Без очереди узнала о свободном месте прямо у чат-бота.»">«Кезекте тұрмай-ақ, чат-боттан бос орынды бірден білдім.»</p>
+        <p class="font-bold text-sm" data-kz="Әсел Ж., ата-ана" data-ru="Асель Ж., родитель">Әсел Ж., ата-ана</p>
+      </div>
+    </div>
+
+    <!-- AUDIO PANEL -->
+    <div class="tab-panel grid sm:grid-cols-2 lg:grid-cols-3 gap-5" data-tab-panel="audio">
+      <div class="card p-6 relative reveal">
+        <span class="sample-badge" data-kz="Үлгі" data-ru="Пример">Үлгі</span>
+        <div class="flex items-center gap-3 mb-4">
+          <button type="button" class="w-12 h-12 rounded-full bg-brand-green text-white flex items-center justify-center cursor-pointer flex-shrink-0" aria-label="Аудионы ойнату" data-kz-aria="Аудионы ойнату" data-ru-aria="Воспроизвести аудио"><svg width="18" height="18"><use href="#ic-play"/></svg></button>
+          <div class="waveform flex-1">
+            <span style="height:30%"></span><span style="height:60%"></span><span style="height:90%"></span><span style="height:45%"></span><span style="height:70%"></span><span style="height:35%"></span><span style="height:80%"></span><span style="height:50%"></span><span style="height:65%"></span><span style="height:40%"></span><span style="height:85%"></span><span style="height:55%"></span>
+          </div>
+          <span class="text-xs text-brand-muted font-bold">0:18</span>
+        </div>
+        <p class="font-bold text-sm" data-kz="Бақыт Е., ата-ана" data-ru="Бахыт Е., родитель">Бақыт Е., ата-ана</p>
+      </div>
+      <div class="card p-6 relative reveal">
+        <span class="sample-badge" data-kz="Үлгі" data-ru="Пример">Үлгі</span>
+        <div class="flex items-center gap-3 mb-4">
+          <button type="button" class="w-12 h-12 rounded-full bg-brand-red text-white flex items-center justify-center cursor-pointer flex-shrink-0" aria-label="Аудионы ойнату" data-kz-aria="Аудионы ойнату" data-ru-aria="Воспроизвести аудио"><svg width="18" height="18"><use href="#ic-play"/></svg></button>
+          <div class="waveform flex-1">
+            <span style="height:50%"></span><span style="height:80%"></span><span style="height:40%"></span><span style="height:65%"></span><span style="height:30%"></span><span style="height:90%"></span><span style="height:55%"></span><span style="height:35%"></span><span style="height:70%"></span><span style="height:45%"></span><span style="height:60%"></span><span style="height:25%"></span>
+          </div>
+          <span class="text-xs text-brand-muted font-bold">0:24</span>
+        </div>
+        <p class="font-bold text-sm" data-kz="Мадина Қ., ата-ана" data-ru="Мадина К., родитель">Мадина Қ., ата-ана</p>
+      </div>
+      <div class="card p-6 relative reveal">
+        <span class="sample-badge" data-kz="Үлгі" data-ru="Пример">Үлгі</span>
+        <div class="flex items-center gap-3 mb-4">
+          <button type="button" class="w-12 h-12 rounded-full bg-brand-green text-white flex items-center justify-center cursor-pointer flex-shrink-0" aria-label="Аудионы ойнату" data-kz-aria="Аудионы ойнату" data-ru-aria="Воспроизвести аудио"><svg width="18" height="18"><use href="#ic-play"/></svg></button>
+          <div class="waveform flex-1">
+            <span style="height:40%"></span><span style="height:70%"></span><span style="height:55%"></span><span style="height:85%"></span><span style="height:35%"></span><span style="height:60%"></span><span style="height:30%"></span><span style="height:75%"></span><span style="height:50%"></span><span style="height:65%"></span><span style="height:45%"></span><span style="height:80%"></span>
+          </div>
+          <span class="text-xs text-brand-muted font-bold">0:15</span>
+        </div>
+        <p class="font-bold text-sm" data-kz="Тимур Р., ата-ана" data-ru="Тимур Р., родитель">Тимур Р., ата-ана</p>
+      </div>
+    </div>
+
+    <!-- 2GIS PANEL -->
+    <div class="tab-panel grid sm:grid-cols-2 lg:grid-cols-3 gap-5" data-tab-panel="2gis">
+      <div class="card p-6 relative reveal">
+        <span class="sample-badge" data-kz="Үлгі" data-ru="Пример">Үлгі</span>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="icon-tile green !w-9 !h-9 !min-w-9 !rounded-lg"><svg width="16" height="16"><use href="#ic-map-2gis"/></svg></span>
+          <div>
+            <p class="font-bold text-sm leading-none" data-kz="«Алтын бөбек» балабақшасы" data-ru="Детский сад «Алтын бобек»">«Алтын бөбек» балабақшасы</p>
+            <div class="stars text-xs mt-1"><svg width="13" height="13"><use href="#ic-star"/></svg><svg width="13" height="13"><use href="#ic-star"/></svg><svg width="13" height="13"><use href="#ic-star"/></svg><svg width="13" height="13"><use href="#ic-star"/></svg><svg width="13" height="13"><use href="#ic-star"/></svg></div>
+          </div>
+        </div>
+        <p class="text-brand-muted text-sm leading-relaxed mb-4" data-kz="«Таза, ұйымдастырылған, тамақтану сапасы жоғары.» — 2GIS пікірі" data-ru="«Чисто, организованно, питание на высоком уровне.» — отзыв с 2GIS">«Таза, ұйымдастырылған, тамақтану сапасы жоғары.» — 2GIS пікірі</p>
+        <a href="https://2gis.kz" target="_blank" rel="noopener" class="text-sm font-bold text-brand-green inline-flex items-center gap-1 cursor-pointer">
+          <span data-kz="2GIS-те қарау" data-ru="Смотреть на 2GIS">2GIS-те қарау</span>
+          <svg width="14" height="14"><use href="#ic-arrow-right"/></svg>
+        </a>
+      </div>
+      <div class="card p-6 relative reveal">
+        <span class="sample-badge" data-kz="Үлгі" data-ru="Пример">Үлгі</span>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="icon-tile red !w-9 !h-9 !min-w-9 !rounded-lg"><svg width="16" height="16"><use href="#ic-map-2gis"/></svg></span>
+          <div>
+            <p class="font-bold text-sm leading-none" data-kz="«Күншуақ» балабақшасы" data-ru="Детский сад «Куншуак»">«Күншуақ» балабақшасы</p>
+            <div class="stars text-xs mt-1"><svg width="13" height="13"><use href="#ic-star"/></svg><svg width="13" height="13"><use href="#ic-star"/></svg><svg width="13" height="13"><use href="#ic-star"/></svg><svg width="13" height="13"><use href="#ic-star"/></svg><svg width="13" height="13"><use href="#ic-star"/></svg></div>
+          </div>
+        </div>
+        <p class="text-brand-muted text-sm leading-relaxed mb-4" data-kz="«Әкімшілік әрқашан байланыста, жауап жылдам.» — 2GIS пікірі" data-ru="«Администрация всегда на связи, отвечает быстро.» — отзыв с 2GIS">«Әкімшілік әрқашан байланыста, жауап жылдам.» — 2GIS пікірі</p>
+        <a href="https://2gis.kz" target="_blank" rel="noopener" class="text-sm font-bold text-brand-green inline-flex items-center gap-1 cursor-pointer">
+          <span data-kz="2GIS-те қарау" data-ru="Смотреть на 2GIS">2GIS-те қарау</span>
+          <svg width="14" height="14"><use href="#ic-arrow-right"/></svg>
+        </a>
+      </div>
+      <div class="card p-6 relative reveal">
+        <span class="sample-badge" data-kz="Үлгі" data-ru="Пример">Үлгі</span>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="icon-tile green !w-9 !h-9 !min-w-9 !rounded-lg"><svg width="16" height="16"><use href="#ic-map-2gis"/></svg></span>
+          <div>
+            <p class="font-bold text-sm leading-none" data-kz="«Балдырған» балабақшасы" data-ru="Детский сад «Балдырган»">«Балдырған» балабақшасы</p>
+            <div class="stars text-xs mt-1"><svg width="13" height="13"><use href="#ic-star"/></svg><svg width="13" height="13"><use href="#ic-star"/></svg><svg width="13" height="13"><use href="#ic-star"/></svg><svg width="13" height="13"><use href="#ic-star"/></svg><svg width="13" height="13"><use href="#ic-star"/></svg></div>
+          </div>
+        </div>
+        <p class="text-brand-muted text-sm leading-relaxed mb-4" data-kz="«Бос орынды күтпей-ақ WhatsApp-тан хабарлама келді.» — 2GIS пікірі" data-ru="«О свободном месте узнала из WhatsApp, не дожидаясь очереди.» — отзыв с 2GIS">«Бос орынды күтпей-ақ WhatsApp-тан хабарлама келді.» — 2GIS пікірі</p>
+        <a href="https://2gis.kz" target="_blank" rel="noopener" class="text-sm font-bold text-brand-green inline-flex items-center gap-1 cursor-pointer">
+          <span data-kz="2GIS-те қарау" data-ru="Смотреть на 2GIS">2GIS-те қарау</span>
+          <svg width="14" height="14"><use href="#ic-arrow-right"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="px-4 md:px-8 py-16 md:py-24 bg-brand-creamdeep/60">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-10 reveal">
+      <span class="eyebrow green">
+        <svg width="14" height="14"><use href="#ic-chat"/></svg>
+        <span data-kz="ЖИІ СҰРАЛАТЫН СҰРАҚТАР" data-ru="ЧАСТЫЕ ВОПРОСЫ">ЖИІ СҰРАЛАТЫН СҰРАҚТАР</span>
+      </span>
+      <h2 class="font-display font-bold text-3xl md:text-4xl mt-5 leading-tight" data-kz="Сұрағыңыз бар ма?" data-ru="Остались вопросы?">Сұрағыңыз бар ма?</h2>
+    </div>
+
+    <div class="space-y-3 reveal">
+      <div class="faq-item">
+        <button type="button" class="faq-question cursor-pointer" aria-expanded="false">
+          <span data-kz="BaYou Generation қалай жұмыс істейді?" data-ru="Как работает BaYou Generation?">BaYou Generation қалай жұмыс істейді?</span>
+          <svg width="20" height="20" class="chev"><use href="#ic-chevron-down"/></svg>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner" data-kz="Платформа балабақшаның тапсырыс, контент, жариялау, чат-бот және тіркеу процестерін бір жерге жинайды әрі AI көмегімен автоматтандырады. Сіз тек нәтижені бақылайсыз." data-ru="Платформа объединяет процессы заказов, контента, публикаций, чат-бота и записи детей в одном месте и автоматизирует их с помощью AI. Вы только отслеживаете результат.">Платформа балабақшаның тапсырыс, контент, жариялау, чат-бот және тіркеу процестерін бір жерге жинайды әрі AI көмегімен автоматтандырады. Сіз тек нәтижені бақылайсыз.</div></div>
+      </div>
+      <div class="faq-item">
+        <button type="button" class="faq-question cursor-pointer" aria-expanded="false">
+          <span data-kz="Деректер қауіпсіз бе?" data-ru="Безопасны ли данные?">Деректер қауіпсіз бе?</span>
+          <svg width="20" height="20" class="chev"><use href="#ic-chevron-down"/></svg>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner" data-kz="Иә. Әр балабақшаның деректері бір-бірінен бөлек сақталады (multi-tenant изоляция), Қазақстан серверінде, ҚР заңнамасына сай шифрланған түрде." data-ru="Да. Данные каждого сада хранятся изолированно (multi-tenant), на серверах в Казахстане, в зашифрованном виде, согласно законодательству РК.">Иә. Әр балабақшаның деректері бір-бірінен бөлек сақталады (multi-tenant изоляция), Қазақстан серверінде, ҚР заңнамасына сай шифрланған түрде.</div></div>
+      </div>
+      <div class="faq-item">
+        <button type="button" class="faq-question cursor-pointer" aria-expanded="false">
+          <span data-kz="WhatsApp боты қандай тілде сөйлейді?" data-ru="На каком языке говорит WhatsApp-бот?">WhatsApp боты қандай тілде сөйлейді?</span>
+          <svg width="20" height="20" class="chev"><use href="#ic-chevron-down"/></svg>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner" data-kz="Қазақша және орысша — екеуінде де табиғи түрде. Контент те, бот жауаптары да екі тілде бір промпттан параллель жасалады." data-ru="На казахском и русском — естественно на обоих. Контент и ответы бота создаются параллельно на двух языках из одного запроса.">Қазақша және орысша — екеуінде де табиғи түрде. Контент те, бот жауаптары да екі тілде бір промпттан параллель жасалады.</div></div>
+      </div>
+      <div class="faq-item">
+        <button type="button" class="faq-question cursor-pointer" aria-expanded="false">
+          <span data-kz="Тарифті қалай таңдау керек?" data-ru="Как выбрать тариф?">Тарифті қалай таңдау керек?</span>
+          <svg width="20" height="20" class="chev"><use href="#ic-chevron-down"/></svg>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner" data-kz="Балабақшаның көлеміне және қажетті модульдерге байланысты. Сұрау жіберіңіз — команда сізге жеке ұсыныс дайындайды." data-ru="Это зависит от размера сада и нужных модулей. Отправьте запрос — команда подготовит для вас индивидуальное предложение.">Балабақшаның көлеміне және қажетті модульдерге байланысты. Сұрау жіберіңіз — команда сізге жеке ұсыныс дайындайды.</div></div>
+      </div>
+      <div class="faq-item">
+        <button type="button" class="faq-question cursor-pointer" aria-expanded="false">
+          <span data-kz="Демоны қалай алуға болады?" data-ru="Как получить демо?">Демоны қалай алуға болады?</span>
+          <svg width="20" height="20" class="chev"><use href="#ic-chevron-down"/></svg>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner" data-kz="Төмендегі байланыс формасын толтырыңыз немесе WhatsApp/email арқылы жазыңыз — 1 жұмыс күні ішінде хабарласамыз." data-ru="Заполните форму ниже или напишите в WhatsApp/email — мы свяжемся в течение 1 рабочего дня.">Төмендегі байланыс формасын толтырыңыз немесе WhatsApp/email арқылы жазыңыз — 1 жұмыс күні ішінде хабарласамыз.</div></div>
+      </div>
+      <div class="faq-item">
+        <button type="button" class="faq-question cursor-pointer" aria-expanded="false">
+          <span data-kz="Жүйеге қосылу қанша уақыт алады?" data-ru="Сколько времени занимает подключение?">Жүйеге қосылу қанша уақыт алады?</span>
+          <svg width="20" height="20" class="chev"><use href="#ic-chevron-down"/></svg>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner" data-kz="Негізгі баптау бірнеше күнге созылады: тіркелу, брендтеу, топтар мен қызметкерлерді қосу. Содан кейін платформа толық жұмысқа дайын." data-ru="Базовая настройка занимает несколько дней: регистрация, брендинг, добавление групп и сотрудников. После этого платформа полностью готова к работе.">Негізгі баптау бірнеше күнге созылады: тіркелу, брендтеу, топтар мен қызметкерлерді қосу. Содан кейін платформа толық жұмысқа дайын.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section id="contact" class="px-4 md:px-8 py-16 md:py-24">
+  <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-0 rounded-[40px] overflow-hidden reveal" style="box-shadow:var(--shadow-clay-lg)">
+    <div class="p-8 md:p-12 flex flex-col justify-center" style="background:linear-gradient(150deg,#63CC34,var(--green) 60%,var(--green-dark))">
+      <h2 class="font-display font-bold text-2xl md:text-3xl text-white mb-4 leading-tight" data-kz="Балабақшаңызды бүгін автоматтандырыңыз" data-ru="Автоматизируйте свой сад уже сегодня">Балабақшаңызды бүгін автоматтандырыңыз</h2>
+      <p class="text-white/90 mb-7 leading-relaxed" data-kz="Демо сұраңыз — команда 1 жұмыс күні ішінде хабарласады әрі платформаны тегін көрсетеді." data-ru="Запросите демо — команда свяжется в течение 1 рабочего дня и бесплатно покажет платформу.">Демо сұраңыз — команда 1 жұмыс күні ішінде хабарласады әрі платформаны тегін көрсетеді.</p>
+      <div class="flex flex-wrap gap-3">
+        <a href="https://wa.me/77086279544?text=Сәлеметсіз%20бе!%20BaYou%20Generation%20туралы%20демо%20алғым%20келеді." target="_blank" rel="noopener" class="btn cursor-pointer" style="background:#fff;color:var(--green-dark)">
+          <svg width="20" height="20"><use href="#ic-phone"/></svg>
+          <span>WhatsApp: +7 708 627 95 44</span>
+        </a>
+        <a href="mailto:minaikhan.saltanat@gmail.com" class="btn btn-ghost cursor-pointer" style="border:2px solid rgba(255,255,255,0.6); color:#fff">
+          <svg width="20" height="20"><use href="#ic-mail"/></svg>
+          <span>minaikhan.saltanat@gmail.com</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="p-8 md:p-12 bg-white">
+      <h3 class="font-display font-semibold text-xl mb-5" data-kz="Демо сұрау формасы" data-ru="Форма запроса демо">Демо сұрау формасы</h3>
+      <form id="contactForm" class="space-y-4">
+        <div>
+          <label for="cf-name" class="block text-sm font-bold mb-1.5" data-kz="Аты-жөніңіз" data-ru="Ваше имя">Аты-жөніңіз</label>
+          <input id="cf-name" name="name" type="text" required autocomplete="name" class="w-full rounded-2xl border px-4 py-3 text-base" style="border-color:var(--border)" data-kz-ph="Мысалы: Айгерім Сатпаева" data-ru-ph="Например: Айгерим Сатпаева" placeholder="Мысалы: Айгерім Сатпаева">
+        </div>
+        <div>
+          <label for="cf-garden" class="block text-sm font-bold mb-1.5" data-kz="Балабақша атауы" data-ru="Название детского сада">Балабақша атауы</label>
+          <input id="cf-garden" name="garden" type="text" required class="w-full rounded-2xl border px-4 py-3 text-base" style="border-color:var(--border)" data-kz-ph="«Алтын бөбек»" data-ru-ph="«Алтын бобек»" placeholder="«Алтын бөбек»">
+        </div>
+        <div>
+          <label for="cf-phone" class="block text-sm font-bold mb-1.5" data-kz="Телефон / WhatsApp" data-ru="Телефон / WhatsApp">Телефон / WhatsApp</label>
+          <input id="cf-phone" name="phone" type="tel" required inputmode="tel" autocomplete="tel" class="w-full rounded-2xl border px-4 py-3 text-base" style="border-color:var(--border)" placeholder="+7 7__ ___ __ __">
+        </div>
+        <div>
+          <label for="cf-message" class="block text-sm font-bold mb-1.5" data-kz="Хабарлама (міндетті емес)" data-ru="Сообщение (необязательно)">Хабарлама (міндетті емес)</label>
+          <textarea id="cf-message" name="message" rows="3" class="w-full rounded-2xl border px-4 py-3 text-base resize-none" style="border-color:var(--border)" data-kz-ph="Қандай модульдер қызықтырады?" data-ru-ph="Какие модули интересуют?" placeholder="Қандай модульдер қызықтырады?"></textarea>
+        </div>
+        <button type="submit" class="btn btn-accent w-full cursor-pointer">
+          <svg width="20" height="20"><use href="#ic-send"/></svg>
+          <span data-kz="WhatsApp арқылы жіберу" data-ru="Отправить через WhatsApp">WhatsApp арқылы жіберу</span>
+        </button>
+        <p class="text-xs text-brand-muted text-center" data-kz="Жіберу батырмасы WhatsApp қолданбасын дайын хабарламамен ашады." data-ru="Кнопка отправки откроет WhatsApp с готовым сообщением.">Жіберу батырмасы WhatsApp қолданбасын дайын хабарламамен ашады.</p>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- FOOTER -->
+<footer style="background:var(--ink)" class="text-white pt-14 pb-8 px-4 md:px-8">
+  <div class="max-w-7xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
+    <div>
+      <img src="assets/img/logo-transparent.png" alt="BaYou Generation" class="h-11 mb-4" style="filter:brightness(0) invert(1)">
+      <p class="text-white/60 text-sm leading-relaxed max-w-xs" data-kz="Балабақша директорларына арналған AI операциялық жүйе. Балаға деген сүйіспеншілікпен жасалды." data-ru="AI-операционная система для директоров детских садов. Создано с любовью к детям.">Балабақша директорларына арналған AI операциялық жүйе. Балаға деген сүйіспеншілікпен жасалды.</p>
+    </div>
+    <div>
+      <h4 class="font-display font-semibold mb-4" data-kz="Платформа" data-ru="Платформа">Платформа</h4>
+      <ul class="space-y-2.5 text-sm text-white/70">
+        <li><a href="#modules" class="hover:text-white cursor-pointer" data-kz="Мүмкіндіктер" data-ru="Возможности">Мүмкіндіктер</a></li>
+        <li><a href="#how" class="hover:text-white cursor-pointer" data-kz="Қалай жұмыс істейді" data-ru="Как это работает">Қалай жұмыс істейді</a></li>
+        <li><a href="#pricing" class="hover:text-white cursor-pointer" data-kz="Бағасы" data-ru="Тарифы">Бағасы</a></li>
+        <li><a href="#reviews" class="hover:text-white cursor-pointer" data-kz="Пікірлер" data-ru="Отзывы">Пікірлер</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="font-display font-semibold mb-4" data-kz="Компания" data-ru="Компания">Компания</h4>
+      <ul class="space-y-2.5 text-sm text-white/70">
+        <li><a href="#why" class="hover:text-white cursor-pointer" data-kz="Неге біз" data-ru="Почему мы">Неге біз</a></li>
+        <li><a href="#faq" class="hover:text-white cursor-pointer" data-kz="Сұрақ-жауап" data-ru="Вопросы">Сұрақ-жауап</a></li>
+        <li><a href="#contact" class="hover:text-white cursor-pointer" data-kz="Байланыс" data-ru="Контакты">Байланыс</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="font-display font-semibold mb-4" data-kz="Байланыс" data-ru="Контакты">Байланыс</h4>
+      <ul class="space-y-3 text-sm text-white/70">
+        <li><a href="https://wa.me/77086279544" target="_blank" rel="noopener" class="flex items-center gap-2 hover:text-white cursor-pointer"><svg width="16" height="16"><use href="#ic-phone"/></svg><span>+7 708 627 95 44</span></a></li>
+        <li><a href="mailto:minaikhan.saltanat@gmail.com" class="flex items-center gap-2 hover:text-white cursor-pointer"><svg width="16" height="16"><use href="#ic-mail"/></svg><span>minaikhan.saltanat@gmail.com</span></a></li>
+        <li><span class="flex items-center gap-2"><svg width="16" height="16"><use href="#ic-pin"/></svg><span data-kz="Алматы, Қазақстан" data-ru="Алматы, Казахстан">Алматы, Қазақстан</span></span></li>
+      </ul>
+      <div class="lang-pill mt-5" role="group" aria-label="Тіл / Язык">
+        <button type="button" data-lang="kz" class="active cursor-pointer">ҚАЗ</button>
+        <button type="button" data-lang="ru" class="cursor-pointer">РУС</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/50">
+    <p>&copy; <span id="yearNow">2026</span> BaYou Generation. <span data-kz="Барлық құқықтар қорғалған." data-ru="Все права защищены.">Барлық құқықтар қорғалған.</span></p>
+    <p data-kz="BAQSHA Platform негізінде жасалды" data-ru="Создано на базе BAQSHA Platform">BAQSHA Platform негізінде жасалды</p>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
