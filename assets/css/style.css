@@ -4,12 +4,6 @@
    Voice: a kindergarten's warmth, built for the adults who run one.
    ========================================================================== */
 
-@font-face {
-  font-family: 'Unbounded';
-  font-display: swap;
-  src: local('Unbounded');
-}
-
 :root {
   --red: #E8262F;
   --red-dark: #BD1B23;
@@ -39,7 +33,7 @@ body {
 }
 
 h1, h2, h3, h4, .font-display {
-  font-family: 'Unbounded', 'Nunito', sans-serif;
+  font-family: 'Montserrat', 'Nunito', sans-serif;
 }
 
 /* respect reduced motion globally */
@@ -244,7 +238,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .eyebrow.red { background: var(--red-light); color: var(--red-dark); }
 
 /* ---------- Stat counters ---------- */
-.stat-num { font-family: 'Unbounded', sans-serif; font-weight: 700; }
+.stat-num { font-family: 'Montserrat', sans-serif; font-weight: 700; }
 
 /* ---------- Reveal on scroll ---------- */
 .reveal { opacity: 0; transform: translateY(18px); transition: opacity 600ms ease, transform 600ms ease; }
@@ -258,8 +252,33 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   border: 1px solid var(--border); background: #fff; transition: all 200ms ease;
 }
 .tab-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
-.tab-panel { display: none; }
-.tab-panel.active { display: grid; }
+.tab-panel { display: none !important; }
+.tab-panel.active { display: block !important; }
+
+/* ---------- Reviews carousel ---------- */
+.review-carousel { position: relative; }
+.carousel-viewport {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.carousel-viewport::-webkit-scrollbar { display: none; }
+.carousel-track { display: flex; gap: 1.25rem; padding: 0.25rem 0.25rem 0.5rem; }
+.carousel-card { flex: 0 0 auto; width: 84%; scroll-snap-align: start; }
+@media (min-width: 640px) { .carousel-card { width: 46%; } }
+@media (min-width: 1024px) { .carousel-card { width: 31.3%; } }
+
+.carousel-controls { display: flex; justify-content: center; gap: 0.75rem; margin-top: 1.5rem; }
+.carousel-btn {
+  width: 44px; height: 44px; min-width: 44px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #fff; border: 1px solid var(--border); box-shadow: var(--shadow-clay);
+  cursor: pointer; transition: background-color 200ms ease, transform 200ms ease;
+}
+.carousel-btn:hover { background: var(--green); transform: translateY(-1px); }
+.carousel-btn:hover svg { stroke: #fff; }
 
 /* sample-data badge for the review showcase (so it reads as a feature demo, not a fabricated claim) */
 .sample-badge {

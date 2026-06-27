@@ -178,8 +178,88 @@
     btn.addEventListener('click', function () {
       var target = btn.getAttribute('data-tab');
       tabButtons.forEach(function (b) { b.classList.toggle('active', b === btn); b.setAttribute('aria-selected', b === btn ? 'true' : 'false'); });
-      tabPanels.forEach(function (p) { p.classList.toggle('active', p.getAttribute('data-tab-panel') === target); });
+      tabPanels.forEach(function (p) {
+        var isActive = p.getAttribute('data-tab-panel') === target;
+        p.classList.toggle('active', isActive);
+        if (isActive) initCarousel(p);
+      });
     });
+  });
+
+  /* ---------------- Reviews carousels (infinite loop) ---------------- */
+  function cardStep(panel) {
+    var track = panel.querySelector('.carousel-track');
+    var card = track.children[0];
+    var gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap || 0) || 0;
+    return card.getBoundingClientRect().width + gap;
+  }
+
+  function initCarousel(panel) {
+    var viewport = panel.querySelector('.carousel-viewport');
+    var track = panel.querySelector('.carousel-track');
+    if (!viewport || !track) return;
+
+    if (!track.dataset.cloned) {
+      var originals = Array.prototype.slice.call(track.children);
+      var startClones = originals.map(function (el) { return el.cloneNode(true); });
+      var endClones = originals.map(function (el) { return el.cloneNode(true); });
+      startClones.forEach(function (el) { track.appendChild(el); });
+      originals.forEach(function (el) { track.appendChild(el); });
+      endClones.forEach(function (el) { track.appendChild(el); });
+      track.dataset.cloned = '1';
+      track.dataset.count = String(originals.length);
+    }
+
+    var count = parseInt(track.dataset.count, 10);
+    var realStartCard = track.children[count];
+    viewport.style.scrollBehavior = 'auto';
+    viewport.scrollLeft = realStartCard.offsetLeft - track.offsetLeft;
+    requestAnimationFrame(function () { viewport.style.scrollBehavior = 'smooth'; });
+  }
+
+  function wrapIfNeeded(panel) {
+    var viewport = panel.querySelector('.carousel-viewport');
+    var track = panel.querySelector('.carousel-track');
+    var count = parseInt(track.dataset.count || '0', 10);
+    if (!count) return;
+    var realStart = track.children[count].offsetLeft - track.offsetLeft;
+    var setWidth = track.children[2 * count].offsetLeft - track.children[count].offsetLeft;
+    if (viewport.scrollLeft < realStart - 4) {
+      viewport.style.scrollBehavior = 'auto';
+      viewport.scrollLeft += setWidth;
+      requestAnimationFrame(function () { viewport.style.scrollBehavior = 'smooth'; });
+    } else if (viewport.scrollLeft > realStart + setWidth + 4) {
+      viewport.style.scrollBehavior = 'auto';
+      viewport.scrollLeft -= setWidth;
+      requestAnimationFrame(function () { viewport.style.scrollBehavior = 'smooth'; });
+    }
+  }
+
+  document.querySelectorAll('.review-carousel').forEach(function (rc) {
+    var panel = rc.closest('.tab-panel');
+    var viewport = rc.querySelector('.carousel-viewport');
+    var prevBtn = rc.querySelector('.carousel-prev');
+    var nextBtn = rc.querySelector('.carousel-next');
+    var wrapTimer = null;
+
+    nextBtn.addEventListener('click', function () {
+      viewport.scrollBy({ left: cardStep(panel), behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+    });
+    prevBtn.addEventListener('click', function () {
+      viewport.scrollBy({ left: -cardStep(panel), behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+    });
+    viewport.addEventListener('scroll', function () {
+      clearTimeout(wrapTimer);
+      wrapTimer = setTimeout(function () { wrapIfNeeded(panel); }, 120);
+    }, { passive: true });
+  });
+
+  var activePanel = document.querySelector('.tab-panel.active');
+  if (activePanel) initCarousel(activePanel);
+
+  window.addEventListener('resize', function () {
+    var current = document.querySelector('.tab-panel.active');
+    if (current) initCarousel(current);
   });
 
   /* ---------------- Contact form -> WhatsApp deep link ---------------- */
