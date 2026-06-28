@@ -66,6 +66,11 @@ body { padding-top: 84px; }
 }
 .btn:active { transform: translateY(1px) scale(0.98); }
 
+/* long unbreakable labels (phone numbers, emails) must wrap on narrow screens
+   instead of forcing the button — and its ancestors — wider than the viewport */
+.btn-wrap { white-space: normal; word-break: break-word; text-align: left; line-height: 1.3; }
+.btn-wrap svg { flex-shrink: 0; }
+
 .btn-primary {
   background: linear-gradient(180deg, #63CC34 0%, var(--green) 55%, var(--green-dark) 100%);
   color: #fff;
